@@ -1,0 +1,181 @@
+#include <stdio.h>
+#include <math.h>
+#include <ctype.h>
+#include <string.h>
+
+// task1
+
+void copyFile(const char *from, const char *to) {
+    FILE *f_from = fopen(from, "r");
+    FILE *f_to = fopen(to, "w");
+    char ch;
+
+    while ((ch = fgetc(f_from)) != EOF) {
+        fputc(ch, f_to);
+    }
+
+    fclose(f_from);
+    fclose(f_to);
+}
+
+void task1()) {
+    copyFile("f1.txt", "h.txt");
+    copyFile("f2.txt", "f1.txt");
+    copyFile("h.txt", "f2.txt");
+    return 0;
+}
+
+// task2
+
+void task2() {
+    FILE *f = fopen("f.txt", "r");
+    FILE *g = fopen("g.txt", "w");
+
+    fseek(f, 0, SEEK_END);
+    long size = ftell(f);
+
+    for (long i = size - 1; i >= 0; i--) {
+        fseek(f, i, SEEK_SET);
+        fputc(fgetc(f), g);
+    }
+
+    fclose(f);
+    fclose(g);
+    return 0;
+}
+
+// task 3
+
+void appendFile(FILE *from, FILE *to) {
+    char ch;
+    while ((ch = fgetc(from)) != EOF) {
+        fputc(ch, to);
+    }
+}
+
+void task3() {
+    FILE *f = fopen("f.txt", "r");
+    FILE *g = fopen("g.txt", "r");
+    FILE *h = fopen("h.txt", "w");
+
+    appendFile(f, h);
+    appendFile(g, h);
+
+    fclose(f);
+    fclose(g);
+    fclose(h);
+    return 0;
+}
+
+// task4
+
+int isPerfectSquare(int x) {
+    int r = sqrt(x);
+    return r * r == x;
+}
+
+void task4() {
+    FILE *f = fopen("f.txt", "r");
+    FILE *a = fopen("even.txt", "w");
+    FILE *b = fopen("div3_not7.txt", "w");
+    FILE *c = fopen("square.txt", "w");
+
+    int x;
+    while (fscanf(f, "%d", &x) != EOF) {
+        if (x % 2 == 0)
+            fprintf(a, "%d ", x);
+
+        if (x % 3 == 0 && x % 7 != 0)
+            fprintf(b, "%d ", x);
+
+        if (x >= 0 && isPerfectSquare(x))
+            fprintf(c, "%d ", x);
+    }
+
+    fclose(f);
+    fclose(a);
+    fclose(b);
+    fclose(c);
+    return 0;
+}
+// task 5
+
+void task5 () {
+    FILE *f = fopen("f.txt", "r");
+    FILE *g = fopen("g.txt", "w");
+
+    char word[100];
+    int i = 0;
+    char ch;
+
+    while ((ch = fgetc(f)) != EOF) {
+        if (!isspace(ch)) {
+            word[i++] = ch;
+        } else {
+            if (i > 1) {
+                word[i] = '\0';
+                fprintf(g, "%s ", word);
+            }
+            i = 0;
+        }
+    }
+
+    if (i > 1) {
+        word[i] = '\0';
+        fprintf(g, "%s", word);
+    }
+
+    fclose(f);
+    fclose(g);
+    return 0;
+}
+
+// task 6
+
+#define MAX 100
+typedef struct {
+    char brand[50];
+    char number[20];
+    char owner[50];
+} Car;
+
+void task6() {
+    FILE *f = fopen("f.txt", "r");
+    FILE *g = fopen("g.txt", "w");
+
+    Car cars[MAX];
+    int n = 0;
+
+    while (fscanf(f, "%s %s %s", cars[n].brand, cars[n].number, cars[n].owner) != EOF) {
+        n++;
+    }
+
+    char target[50] = "Ferrari";
+
+//LECLERC!!!
+
+    fprintf(g, "Владельцы и номера %s:\n", target);
+    for (int i = 0; i < n; i++) {
+        if (strcmp(cars[i].brand, target) == 0) {
+            fprintf(g, "%s %s\n", cars[i].owner, cars[i].number);
+        }
+    }
+
+    fprintf(g, "\nКоличество:\n");
+    for (int i = 0; i < n; i++) {
+        int count = 1;
+        if (cars[i].brand[0] == '\0') continue;
+
+        for (int j = i + 1; j < n; j++) {
+            if (strcmp(cars[i].brand, cars[j].brand) == 0) {
+                count++;
+                cars[j].brand[0] = '\0';
+            }
+        }
+        fprintf(g, "%s: %d\n", cars[i].brand, count);
+    }
+
+    fclose(f);
+    fclose(g);
+    return 0;
+}

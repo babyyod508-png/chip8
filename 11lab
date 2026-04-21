@@ -18,7 +18,7 @@ void copyFile(const char *from, const char *to) {
     fclose(f_to);
 }
 
-void task1()) {
+void task1() {
     copyFile("f1.txt", "h.txt");
     copyFile("f2.txt", "f1.txt");
     copyFile("h.txt", "f2.txt");
